@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "DineSpace API", "version": "1.0.0" },
+  "servers": [{ "url": "http://localhost:5000" }],
+  "paths": {
+    "/api/health": { "get": { "summary": "Health check", "responses": { "200": { "description": "OK" } } } },
+    "/api/auth/register": { "post": { "summary": "Register a customer", "responses": { "201": { "description": "Created" }, "400": { "description": "Existing user" } } } },
+    "/api/auth/login": { "post": { "summary": "Login and receive JWT", "responses": { "200": { "description": "Authenticated" } } } },
+    "/api/restaurants": { "get": { "summary": "List restaurants", "responses": { "200": { "description": "Restaurant list" } } }, "post": { "summary": "Create restaurant" } },
+    "/api/tables": { "get": { "summary": "List tables", "responses": { "200": { "description": "Table list" } } }, "post": { "summary": "Create table" } },
+    "/api/reservations": { "get": { "summary": "List reservations" }, "post": { "summary": "Create reservation" } },
+    "/api/reservations/{id}": { "put": { "summary": "Update reservation with optimistic concurrency version" }, "delete": { "summary": "Cancel reservation" } }
+  }
+}

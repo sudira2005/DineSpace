@@ -1,16 +1,48 @@
-# React + Vite
+# DineSpace — Full Stack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Milestone continuation for the Smart Restaurant Table Reservation System.
 
-Currently, two official plugins are available:
+## Stack
+React + Vite, Node.js + Express, MongoDB/Mongoose, JWT, Socket.io, Jest/Supertest, GitHub Actions, Docker Compose.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run locally
+1. Copy `server/.env.example` to `server/.env` and add your MongoDB URI and JWT secret.
+2. `cd server` then `npm install` and `npm start`.
+3. In another terminal: `cd client` then `npm install` and `npm run dev`.
 
-## React Compiler
+## API
+Auth: POST `/api/auth/register`, POST `/api/auth/login`
+Restaurants: GET/POST/PUT/DELETE `/api/restaurants`
+Tables: GET/POST/PUT/DELETE `/api/tables`
+Reservations: GET/POST/PUT/DELETE `/api/reservations`
+Health: GET `/api/health`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Offline/client persistence
+JWT and the logged-in user are kept in localStorage so the session survives a refresh. Reservation data is fetched again after refresh.
 
-## Expanding the ESLint configuration
+## Concurrency
+Reservations carry a `version` field. An update with an old version returns HTTP 409 instead of silently overwriting a newer update.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Real-time
+Socket.io broadcasts `reservation:changed` events to connected clients.
+
+## CI
+GitHub Actions runs server tests and a client production build on push/PR.
+
+## Docker
+`docker compose up --build` starts client and server.
+
+## Deployment
+A `render.yaml` blueprint and Dockerfiles are included for deployment. Set `MONGO_URI` and `JWT_SECRET` as secret environment variables in the hosting provider. After deployment, replace the frontend API URL with the actual backend URL and record both public URLs in this README/submission.
+
+## Project structure
+- `server/` — Express REST API, JWT authentication, Mongoose models, Socket.io and server tests.
+- `DineSpace/client/` — React/Vite frontend, reusable components, API client, offline reservation cache, Socket.io client and client tests.
+- `.github/workflows/ci.yml` — automated server tests and client build/tests.
+- `docker-compose.yml` — local full-stack orchestration.
+
+## Testing
+Server tests use Jest/Supertest. Client tests use Vitest. CI runs both on pushes and pull requests.
+
+## API documentation
+See `openapi.json` for the documented REST endpoint contract. Protected endpoints use `Authorization: Bearer <JWT>`.
