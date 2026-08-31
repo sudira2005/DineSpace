@@ -1,0 +1,10 @@
+const express = require('express');
+const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { getRestaurants, getRestaurant, createRestaurant, updateRestaurant, deleteRestaurant } = require('../controllers/restaurantController');
+const router = express.Router();
+router.get('/', getRestaurants);
+router.get('/:id', getRestaurant);
+router.post('/', protect, adminOnly, createRestaurant);
+router.put('/:id', protect, adminOnly, updateRestaurant);
+router.delete('/:id', protect, adminOnly, deleteRestaurant);
+module.exports = router;

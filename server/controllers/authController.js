@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
+    if (!fullName || !email || !password || password.length < 6) {
+      return res.status(400).json({ message: "Full name, email and a password of at least 6 characters are required" });
+    }
 
     const existingUser = await User.findOne({ email });
 
@@ -23,10 +26,8 @@ const register = async (req, res) => {
       password: hashedPassword,
     });
 
-    res.status(201).json({
-      message: "Registration successful",
-      user,
-    });
+    const safeUser = { id: user._id, fullName: user.fullName, email: user.email, role: user.role };
+    res.status(201).json({ message: "Registration successful", user: safeUser });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -64,10 +65,7 @@ const login = async (req, res) => {
       }
     );
 
-    res.json({
-      token,
-      user,
-    });
+    res.json({ token, user: { id: user._id, fullName: user.fullName, email: user.email, role: user.role } });
   } catch (error) {
     res.status(500).json({
       message: error.message,

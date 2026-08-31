@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
+const restaurantRoutes = require("./routes/restaurantRoutes");
+const reservationRoutes = require("./routes/reservationRoutes");
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.get("/", (req, res) => {
 
 // Auth Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/restaurants", restaurantRoutes);
+app.use("/api/reservations", reservationRoutes);
 
 // MongoDB Connection
 mongoose

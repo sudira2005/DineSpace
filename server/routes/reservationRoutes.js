@@ -1,0 +1,11 @@
+const express = require('express');
+const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { createReservation, getMyReservations, cancelReservation, getAllReservations, updateReservation } = require('../controllers/reservationController');
+const router = express.Router();
+router.use(protect);
+router.post('/', createReservation);
+router.get('/mine', getMyReservations);
+router.patch('/:id/cancel', cancelReservation);
+router.get('/', adminOnly, getAllReservations);
+router.patch('/:id', adminOnly, updateReservation);
+module.exports = router;
